@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import TidePrediction from '../../_tide-predictor/src'
+import tidePrediction from '../../_tide-predictor/src'
 import { VictoryAxis, VictoryLine, VictoryChart } from 'victory'
 import styled from '@emotion/styled'
 import colors from '../style/colors'
@@ -19,7 +19,6 @@ const TideChart = ({ station }) => {
     })
   })
   useEffect(() => {
-    const tideStationPrediction = new TidePrediction(station.harmonics)
     let mtl = 0
     let mllw = 0
     station.datum.datums.forEach(datum => {
@@ -30,7 +29,9 @@ const TideChart = ({ station }) => {
         mllw = datum.value
       }
     })
-    tideStationPrediction.setOffset(mtl - mllw)
+    const tideStationPrediction = tidePrediction(
+      station.harmonics.HarmonicConstituents
+    )
     const results = []
     station.levels.predictions.forEach(prediction => {
       const now = new Date(prediction.t)

@@ -12,23 +12,24 @@ yarn install @neaps/tide-prediction
 #npm
 npm install --save @neaps/tide-prediction`
 
-const basicUsageCode = `import TidePrediction from '@neaps/tide-prediction'
-const myStation = {
-  HarmonicConstituents: [
-    {
-      "phase_GMT": 98.7,
-      "phase_local": 313.7,
-      "amplitude": 2.687,
-      "name": "M2",
-      "speed": 28.984104
-    }
-    //....there are usually many, read the docs
-  ]
-}
-const Tides = new TidePrediction(myStation)
-Tides.setTimeSpan(new Date('2019-01-01'), new Date('2019-01-10'))
-const highLowTides = Tides.getExtremesPrediction()
-`
+const basicUsageCode = `import TidePrediction from "@neaps/tide-prediction";
+const constituents = [
+  {
+    phase_GMT: 98.7,
+    phase_local: 313.7,
+    amplitude: 2.687,
+    name: "M2",
+    speed: 28.984104
+  }
+  //....there are usually many, read the docs
+];
+
+const highLowTides = tidePrediction(constituents, {
+  phaseKey: "phase_GMT"
+}).getExtremesPrediction(
+  new Date("2019-01-01"),
+  new Date("2019-01-10")
+);`
 
 const IndexPage = ({ data }) => (
   <Layout>
