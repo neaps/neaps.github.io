@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import tidePrediction from '../../_tide-predictor/src'
+import tidePrediction from 'neaps/tide-predictor'
 import { VictoryAxis, VictoryLine, VictoryChart } from 'victory'
 import styled from '@emotion/styled'
 import colors from '../style/colors'
@@ -30,12 +30,17 @@ const TideChart = ({ station }) => {
       }
     })
     const tideStationPrediction = tidePrediction(
-      station.harmonics.HarmonicConstituents
+      station.harmonics.HarmonicConstituents,
+      {
+        phaseKey: 'phase_GMT'
+      }
     )
     const results = []
     station.levels.predictions.forEach(prediction => {
       const now = new Date(prediction.t)
-      const neapsPrediction = tideStationPrediction.getWaterLevelAtTime(now)
+      const neapsPrediction = tideStationPrediction.getWaterLevelAtTime({
+        time: now
+      })
       results.push({
         time: now.getTime(),
         noaa: parseFloat(prediction.v),
