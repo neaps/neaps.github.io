@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import tidePrediction from 'neaps/tide-predictor'
+import tidePrediction from '@neaps/tide-predictor'
 import { VictoryAxis, VictoryLine, VictoryChart } from 'victory'
 import styled from '@emotion/styled'
 import colors from '../style/colors'
