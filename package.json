@@ -45,7 +45,7 @@
   "scripts": {
     "build": "gatsby build",
     "develop": "gatsby develop",
-    "deploy": "gatsby build && echo \"neaps.js.org\" > ./public/CNAME && gh-pages -d public -b gh-pages",
+    "deploy": "gatsby build && echo \"neaps.js.org\" > ./public/CNAME && gh-pages -d public -b master",
     "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
     "start": "npm run develop",
     "serve": "gatsby serve",
