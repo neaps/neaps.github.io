@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[3],{430:function(e,n,t){"use strict";t.r(n),t.d(n,"query",(function(){return c}));t(44);var a=t(1),r=t.n(a),o=t(427),l=t(147);n.default=function(e){var n=e.data;return r.a.createElement(o.a,{title:"Documentation"},r.a.createElement(l.a,{dangerouslySetInnerHTML:{__html:n.allFile.nodes[0].childMarkdownRemark.html.split("\x3c!-- START DOCS --\x3e").pop()}}))};var c="796659221"}}]);
+//# sourceMappingURL=component---src-pages-docs-js-278e1f669146d32f72cc.js.map
