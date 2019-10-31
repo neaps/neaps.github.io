@@ -43,7 +43,7 @@ exports.sourceNodes = ({ actions, createNodeId, reporter }, configOptions) => {
 
     station.internal.contentDigest = crypto
       .createHash(`md5`)
-      .update(JSON.stringify(station))
+      .update(`noaa-station-${stationId}`)
       .digest(`hex`)
     createNode(station)
   })

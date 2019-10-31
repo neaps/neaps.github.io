@@ -3,8 +3,20 @@ import Layout from '../components/layout/default'
 import Container from '../components/container'
 import { LeadParagraph, SectionTitle } from '../components/type'
 import Code from '../components/code'
-import { graphql } from 'gatsby'
-import TideChart from '../components/tide-chart'
+import { graphql, Link } from 'gatsby'
+import styled from '@emotion/styled'
+import logo from '../assets/images/logo.png'
+import bp from '../style/breakpoints'
+import TideChart, { TideChartLegend } from '../components/tide-chart'
+
+const Logo = styled.img`
+  float: right;
+  ${bp({
+    width: ['150px', '250px'],
+    marginLeft: [0, '1.5rem'],
+    marginBottom: ['1rem', '1.5rem']
+  })}
+`
 
 const installCode = `# yarn
 yarn install @neaps/tide-prediction
@@ -34,14 +46,9 @@ const highLowTides = tidePrediction(constituents, {
 const IndexPage = ({ data }) => (
   <Layout>
     <Container>
-      <LeadParagraph>
-        <strong>neap tide:</strong> The time where there is the least differece
-        between high and low water.
-      </LeadParagraph>
-      <LeadParagraph>
-        <strong>neaps:</strong> JavaScript tide predictor for the browser or
-        server.
-      </LeadParagraph>
+      <Logo src={logo} alt="" />
+      <LeadParagraph>A Javascript tide height predictor.</LeadParagraph>
+
       <p>
         Many agencies{' '}
         <a href="https://tidesandcurrents.noaa.gov/web_services_info.html">
@@ -74,8 +81,9 @@ const IndexPage = ({ data }) => (
         >
           Monterey, California
         </a>
-        .
+        . <Link to="/compare">View other comparisons.</Link>
       </p>
+      <TideChartLegend />
       <TideChart station={data.allNoaaStation.nodes[0]} />
 
       <SectionTitle>Installation</SectionTitle>

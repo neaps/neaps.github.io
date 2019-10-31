@@ -1,8 +1,13 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import Layout from '../components/layout/default'
 import Container from '../components/container'
-import TideChart from '../components/tide-chart'
+import TideChart, { TideChartLegend } from '../components/tide-chart'
 import { graphql } from 'gatsby'
+import styled from '@emotion/styled'
+
+const TideStation = styled.div`
+  margin-bottom: 50px;
+`
 
 const ComparePage = ({ data }) => (
   <Layout title="Compare">
@@ -11,8 +16,9 @@ const ComparePage = ({ data }) => (
         Below are the past three days of tidal predictions made by Neaps, NOAA,
         plus the actual tidal levels measured by real-world guages.
       </p>
+      <TideChartLegend />
       {data.allNoaaStation.nodes.map(station => (
-        <Fragment key={station.id}>
+        <TideStation key={station.id}>
           <h2>
             {station.info.stations[0].name}
             {station.info.stations[0].state && (
@@ -23,7 +29,7 @@ const ComparePage = ({ data }) => (
             )}
           </h2>
           <TideChart station={station} />
-        </Fragment>
+        </TideStation>
       ))}
     </Container>
   </Layout>

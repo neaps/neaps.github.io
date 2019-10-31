@@ -16,6 +16,26 @@ module.exports = {
       options: {
         pathToConfigModule: `src/style/typography`
       }
+    },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `tidePredictorReadme`,
+        path: `${__dirname}/node_modules/@neaps/tide-predictor/README.md`
+      }
+    },
+    {
+      resolve: `gatsby-transformer-remark`,
+      options: {
+        plugins: [
+          {
+            resolve: `gatsby-remark-prismjs`,
+            options: {
+              inlineCodeMarker: null
+            }
+          }
+        ]
+      }
     }
   ]
 }

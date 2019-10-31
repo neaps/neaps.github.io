@@ -7,6 +7,7 @@ import { fontsBlack } from '../../style/font-families'
 import { Flex, Box } from '@rebass/grid/emotion'
 import { SkipNavLink, SkipNavContent } from '@reach/skip-nav'
 import '@reach/skip-nav/styles.css'
+import 'prismjs/themes/prism-okaidia.css'
 
 const Header = styled('header')`
   padding-top: 0.2rem;
@@ -69,7 +70,7 @@ const Layout = ({ title, children }) => (
           </Box>
           <Box width={[1 / 2]}>
             <Navigation>
-              <Link to="/compare">Compare</Link>
+              <Link to="/docs">Docs</Link>
               <a
                 href="https://github.com/neaps"
                 target="_blank"
