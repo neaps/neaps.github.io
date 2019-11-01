@@ -35,3 +35,7 @@ label,
 strong {
   font-family: 'Public Sans bold';
 }
+
+pre.prism-code {
+  font-size: 0.8rem !important;
+}
