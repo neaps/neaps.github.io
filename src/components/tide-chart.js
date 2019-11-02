@@ -3,6 +3,7 @@ import tidePrediction from '@neaps/tide-predictor'
 import { VictoryAxis, VictoryLine, VictoryChart } from 'victory'
 import styled from '@emotion/styled'
 import colors from '../style/colors'
+import Table from './table'
 import { fontsBlack } from '../style/font-families'
 
 const TideChartToggle = styled.button`
@@ -24,12 +25,6 @@ const TideChartLabel = styled.span`
   font-family: ${fontsBlack.join(', ')};
   ${props => props.color && `color: ${props.color};`}
   ${props => props.background && `background: ${props.background};`}
-`
-
-const TideTable = styled.table`
-  tr {
-    border-bottom: 1px solid ${colors.primary.dark};
-  }
 `
 
 const TideChartItem = styled.div`
@@ -129,7 +124,7 @@ const TideChart = ({ station }) => {
           {isExpanded && (
             <>
               <p>All water levels are in meters and time is UTC.</p>
-              <TideTable id={`tide-station-table-${station.id}`}>
+              <Table id={`tide-station-table-${station.id}`}>
                 <thead>
                   <tr>
                     <th>Time</th>
@@ -148,7 +143,7 @@ const TideChart = ({ station }) => {
                     </tr>
                   ))}
                 </tbody>
-              </TideTable>
+              </Table>
             </>
           )}
         </>
