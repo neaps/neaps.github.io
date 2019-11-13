@@ -153,17 +153,19 @@ const SubmitHarmonics = ({ data }) => {
               />
             </Box>
             <Box width={[1, 1 / 2]}>
-              <Map
-                style={{ width: '100%', height: '250px' }}
-                center={[location.latitude, location.longitude]}
-                zoom={9}
-              >
-                <TileLayer
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                />
-                <Marker position={[location.latitude, location.longitude]} />
-              </Map>
+              {typeof window !== 'undefined' && (
+                <Map
+                  style={{ width: '100%', height: '250px' }}
+                  center={[location.latitude, location.longitude]}
+                  zoom={9}
+                >
+                  <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                  />
+                  <Marker position={[location.latitude, location.longitude]} />
+                </Map>
+              )}
             </Box>
           </Flex>
           <label htmlFor="country">Country</label>

@@ -85,7 +85,7 @@ const parseLevels = (
     }
     results.push({
       t: time,
-      v: units === 'metric' ? height : height * 3.2808
+      v: units === 'metric' ? height : height / 3.2808
     })
   })
   return {
@@ -102,6 +102,7 @@ const HarmonicsPage = ({ data }) => {
   const [dataTimezone, setDataTimezone] = useState(false)
   const [timeFormat, setTimeFormat] = useState('timestamp')
   const [harmonics, setHarmonics] = useState(false)
+  const [isUploading, setIsUploading] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
 
   useEffect(() => {
@@ -157,6 +158,7 @@ const HarmonicsPage = ({ data }) => {
                   <form
                     onSubmit={event => {
                       event.preventDefault()
+                      setIsUploading(true)
                       const id = uuid()
                       const waterlevels = parseLevels(
                         levels,
@@ -263,8 +265,14 @@ const HarmonicsPage = ({ data }) => {
                             </option>
                           ))}
                         </FormSelect>
-
-                        <FormSubmit value="Confirm data" />
+                        {isUploading ? (
+                          <FormSubmit
+                            value="Uploading data"
+                            disabled="disabled"
+                          />
+                        ) : (
+                          <FormSubmit value="Confirm data" />
+                        )}
                       </>
                     )}
                   </form>

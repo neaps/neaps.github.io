@@ -8,6 +8,9 @@ import { VictoryAxis, VictoryLine, VictoryChart } from 'victory'
 import { ButtonLink, Button, ButtonAnchor } from '../../components/button'
 
 const Preview = ({ harmonics, levels, dataTimezone, id }) => {
+  if (typeof harmonics === 'undefined') {
+    return null
+  }
   dataTimezone = dataTimezone ? dataTimezone : 'Etc/UTC'
   const chartHarmonics = []
   const chartData = []
