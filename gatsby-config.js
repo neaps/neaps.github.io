@@ -2,7 +2,7 @@ module.exports = {
   siteMetadata: {
     title: `Neaps tide library`,
     description: `Javascript tide harmonics and predictions.`,
-    harmonicsServer: `http://localhost:49160/api/v1/`
+    harmonicsServer: `http://localhost:8000/api/v1/`
   },
   plugins: [
     {
