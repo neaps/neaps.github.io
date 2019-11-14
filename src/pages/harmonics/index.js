@@ -26,7 +26,7 @@ const PreviewBox = styled(Box)`
   color: #fff;
 `
 
-const timezoneList = ['UTC/GMT']
+const timezoneList = []
 allTimezones.zones.forEach(zone => {
   zone = zone.split('|')
   timezoneList.push(zone[0])
@@ -46,8 +46,7 @@ const getTime = (time, timeFormat, dataTimezone) => {
   return moment
     .unix(timestamp)
     .tz(dataTimezone)
-    .utc()
-    .toISOString()
+    .toISOString(true)
 }
 
 const parseLevels = (
@@ -61,6 +60,7 @@ const parseLevels = (
   delimiter = typeof delimiter !== 'undefined' ? delimiter : ','
   units = typeof units !== 'undefined' ? units : 'metric'
   limit = typeof limit !== 'undefined' ? limit - 1 : false
+  timeFormat = typeof timeFormat !== 'undefined' ? timeFormat : 'timestamp'
   const results = []
   let error = false
   levels.split(/\n/).forEach((level, index) => {
@@ -99,7 +99,7 @@ const HarmonicsPage = ({ data }) => {
   const [id, setId] = useState(false)
   const [units, setUnits] = useState('metric')
   const [delimiter, setDelimiter] = useState(',')
-  const [dataTimezone, setDataTimezone] = useState(false)
+  const [dataTimezone, setDataTimezone] = useState('Etc/UTC')
   const [timeFormat, setTimeFormat] = useState('timestamp')
   const [harmonics, setHarmonics] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
@@ -129,9 +129,17 @@ const HarmonicsPage = ({ data }) => {
                   setHarmonics(results)
                   setIsProcessing(false)
                 })
+                .catch(error => {
+                  console.log('Get error')
+                  setTimeout(checkStatus, 2000)
+                })
             }, 2000)
             return
           }
+          setTimeout(checkStatus, 2000)
+        })
+        .catch(error => {
+          console.log('Status check error')
           setTimeout(checkStatus, 2000)
         })
     }
@@ -149,7 +157,13 @@ const HarmonicsPage = ({ data }) => {
               harmonics={harmonics}
               id={id}
               dataTimezone={dataTimezone}
-              levels={parseLevels(levels, delimiter, units, dataTimezone)}
+              levels={parseLevels(
+                levels,
+                delimiter,
+                units,
+                timeFormat,
+                dataTimezone
+              )}
             />
           ) : (
             <SampleFlex>
@@ -164,6 +178,7 @@ const HarmonicsPage = ({ data }) => {
                         levels,
                         delimiter,
                         units,
+                        timeFormat,
                         dataTimezone
                       )
                       fetch(
@@ -182,9 +197,6 @@ const HarmonicsPage = ({ data }) => {
                       ).then(response => {
                         setId(id)
                         setIsProcessing(true)
-                        if (typeof window !== 'undefined') {
-                          window.location.hash = id
-                        }
                       })
                     }}
                   >
@@ -259,6 +271,7 @@ const HarmonicsPage = ({ data }) => {
                             setDataTimezone(event.target.value)
                           }}
                         >
+                          <option value="Etc/UTC">UTC/GMT</option>
                           {timezoneList.map(timezone => (
                             <option key={timezone} value={timezone}>
                               {timezone}
@@ -344,8 +357,7 @@ const HarmonicsPage = ({ data }) => {
 const ProcessingMessage = () => (
   <Container>
     <LeadParagraph>
-      Neaps is generating harmonic data. This might take a while. You can always
-      return to this page to check on the status of your request.
+      Neaps is generating harmonic data. This might take a while.
     </LeadParagraph>
     <ReactLoading type="bubbles" height={150} width={150} />
   </Container>
