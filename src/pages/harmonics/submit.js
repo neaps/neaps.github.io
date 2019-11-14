@@ -4,7 +4,12 @@ import Container from '../../components/container'
 import { graphql } from 'gatsby'
 import slugify from 'slugify'
 import { Flex, Box } from '@rebass/grid/emotion'
-import { FormInput, FormSelect, FormSubmit } from '../../components/forms'
+import {
+  FormInput,
+  FormSelect,
+  FormSubmit,
+  TextareaInput
+} from '../../components/forms'
 import { Map, Marker, TileLayer } from 'react-leaflet'
 import url from 'url'
 import colors from '../../style/colors'
@@ -30,6 +35,12 @@ allTimezones.zones.forEach(zone => {
 
 const countryList = countries.getCodeList()
 
+const FormHeader = styled.h3`
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+  border-bottom: 1px solid #000;
+`
+
 const StationID = styled.span`
   font-family: monospace;
   display: inline-block;
@@ -46,7 +57,7 @@ const FormHelp = styled.p`
 const generateStationId = name => {
   return slugify(name)
     .toLowerCase()
-    .replace(/([^0-9a-z\-])/g, '')
+    .replace(/([^0-9a-z-])/g, '')
 }
 
 const SubmitHarmonics = ({ data }) => {
@@ -156,8 +167,8 @@ const SubmitHarmonics = ({ data }) => {
             ))}
           </FormSelect>
 
-          <h3>Location</h3>
-          <Flex>
+          <FormHeader>Location</FormHeader>
+          <Flex flexWrap="wrap">
             <Box width={[1, 1 / 2]} pr={[0, 3]}>
               <p>Use decimal degress, you can also select a point on the map</p>
               <label htmlFor="latitude">Latitude</label>
@@ -182,11 +193,22 @@ const SubmitHarmonics = ({ data }) => {
                   setLocation(location)
                 }}
               />
+
+              <label htmlFor="country">Country</label>
+              <FormSelect
+                onChange={event => {
+                  setCountry(event.target.value.toLowerCase())
+                }}
+              >
+                {Object.keys(countryList).map(code => (
+                  <option value={code}>{countryList[code]}</option>
+                ))}
+              </FormSelect>
             </Box>
             <Box width={[1, 1 / 2]}>
               {typeof window !== 'undefined' && (
                 <Map
-                  style={{ width: '100%', height: '250px' }}
+                  style={{ width: '100%', height: '300px' }}
                   center={[location.latitude, location.longitude]}
                   zoom={9}
                   onClick={event => {
@@ -210,20 +232,14 @@ const SubmitHarmonics = ({ data }) => {
               )}
             </Box>
           </Flex>
-          <label htmlFor="country">Country</label>
-          <FormSelect
-            onChange={event => {
-              setCountry(event.target.value.toLowerCase())
-            }}
-          >
-            {Object.keys(countryList).map(code => (
-              <option value={code}>{countryList[code]}</option>
-            ))}
-          </FormSelect>
-          <h3>Data source</h3>
+
+          <FormHeader>Data source</FormHeader>
           <p>Let us know where this data came from.</p>
           <label htmlFor="source-name">Source name</label>
-          <FormHelp>The name of the agency who generated this data.</FormHelp>
+          <FormHelp>
+            The name of the agency or entity who generated this water level
+            data.
+          </FormHelp>
           <FormInput
             type="text"
             name="source-name"
@@ -235,6 +251,7 @@ const SubmitHarmonics = ({ data }) => {
           />
 
           <label htmlFor="source-url">URL of the agency</label>
+          <FormHelp>The agency or organization's main website.</FormHelp>
           <FormInput
             type="text"
             name="source-url"
@@ -245,8 +262,23 @@ const SubmitHarmonics = ({ data }) => {
             }}
           />
 
+          <label htmlFor="source-source_url">URL of the specific station</label>
+          <FormHelp>The webpage for the specific tide station.</FormHelp>
+          <FormInput
+            type="text"
+            name="source-source_url"
+            id="source-source_url"
+            onChange={event => {
+              source.source_url = event.target.value
+              setSource(source)
+            }}
+          />
+
           <label htmlFor="source-id">Station ID</label>
-          <FormHelp>The internal station ID used by the agency.</FormHelp>
+          <FormHelp>
+            The internal station ID used by the agency (i.e. NOAA stations have
+            unique numeric IDs).
+          </FormHelp>
           <FormInput
             type="text"
             name="source-id"
@@ -258,6 +290,10 @@ const SubmitHarmonics = ({ data }) => {
           />
 
           <label htmlFor="source-license">License information</label>
+          <FormHelp>
+            Briefly describe any license restrictions, and provide a URL if
+            possible for more information.
+          </FormHelp>
           <FormInput
             type="text"
             name="source-license"
@@ -268,18 +304,19 @@ const SubmitHarmonics = ({ data }) => {
             }}
           />
 
-          <label htmlFor="source-source_url">URL of the specific station</label>
-          <FormInput
-            type="text"
-            name="source-source_url"
-            id="source-source_url"
-            onChange={event => {
-              source.source_url = event.target.value
-              setSource(source)
-            }}
-          />
-
-          <h3>Your information</h3>
+          <FormHeader>Your information</FormHeader>
+          <p>
+            You will be contacted with any questions, or when your request is
+            approved. This information{' '}
+            <a
+              href="https://github.com/neaps/tide-database"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              will be publically available on our Github pull requests
+            </a>
+            .
+          </p>
           <label htmlFor="contact-email">Email address</label>
           <FormInput
             type="text"
@@ -287,6 +324,18 @@ const SubmitHarmonics = ({ data }) => {
             id="contact-email"
             onChange={event => {
               contact.email = event.target.value
+              setContact(contact)
+            }}
+          />
+
+          <label htmlFor="contact-notes">Additional notes</label>
+          <FormHelp>Let us know anything about this request.</FormHelp>
+          <TextareaInput
+            type="text"
+            name="contact-notes"
+            id="contact-notes"
+            onChange={event => {
+              contact.notes = event.target.value
               setContact(contact)
             }}
           />
