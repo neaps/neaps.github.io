@@ -8,7 +8,8 @@ import {
   FormInput,
   FormSelect,
   FormSubmit,
-  TextareaInput
+  TextareaInput,
+  FormHelp
 } from '../../components/forms'
 import { Map, Marker, TileLayer } from 'react-leaflet'
 import url from 'url'
@@ -47,11 +48,6 @@ const StationID = styled.span`
   padding: 0.2rem;
   color: #fff;
   background: ${colors.primary.dark};
-`
-
-const FormHelp = styled.p`
-  font-size: 0.8rem;
-  margin-bottom: 0;
 `
 
 const generateStationId = name => {

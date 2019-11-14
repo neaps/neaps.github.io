@@ -10,7 +10,12 @@ import Code from '../../components/code'
 import { LeadParagraph } from '../../components/type'
 import { Flex, Box } from '@rebass/grid/emotion'
 import { ButtonLooksLikeLink } from '../../components/button'
-import { FormInput, FormSelect, FormSubmit } from '../../components/forms'
+import {
+  FormInput,
+  FormSelect,
+  FormSubmit,
+  FormHelp
+} from '../../components/forms'
 import allTimezones from 'moment-timezone/data/packed/latest.json'
 import moment from 'moment-timezone'
 import colors from '../../style/colors'
@@ -28,6 +33,10 @@ const LoadingWrapper = styled.div`
     display: inline-block;
     margin-left: 1rem;
   }
+`
+
+const FormDelimeter = styled(FormInput)`
+  font-family: monospace;
 `
 
 const SampleFlex = styled(Flex)`
@@ -225,10 +234,10 @@ const HarmonicsPage = ({ data }) => {
                           that is sampled at least once an hour, and over a year
                           or more.
                         </p>
-                        <p>
+                        <FormHelp>
                           Your file should be in a simple CSV format, without
                           quotes:
-                        </p>
+                        </FormHelp>
                         <Code code={sampleData} language="text" />
                         <FormInput
                           type="file"
@@ -255,7 +264,11 @@ const HarmonicsPage = ({ data }) => {
                           </ButtonLooksLikeLink>
                         </p>
                         <label htmlFor="delimiter">Field delimiter</label>
-                        <FormInput
+                        <FormHelp>
+                          The string that separates time and water level, i.e. a
+                          comma for CSV files.{' '}
+                        </FormHelp>
+                        <FormDelimeter
                           id="delimiter"
                           defaultValue=","
                           onChange={event => {
@@ -339,8 +352,8 @@ const HarmonicsPage = ({ data }) => {
                         <Table light={true}>
                           <thead>
                             <tr>
-                              <th>Date</th>
-                              <th>Value</th>
+                              <th>Date &amp; time</th>
+                              <th>Water level</th>
                             </tr>
                           </thead>
                           <tbody>

@@ -34,4 +34,9 @@ const FormSubmit = ({ value }) => (
   <FormSubmitElement type="submit" value={value} />
 )
 
-export { FormInput, FormSelect, TextareaInput, FormSubmit }
+const FormHelp = styled.p`
+  font-size: 0.8rem;
+  margin-bottom: 0;
+`
+
+export { FormInput, FormSelect, TextareaInput, FormSubmit, FormHelp }
