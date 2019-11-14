@@ -17,6 +17,19 @@ import colors from '../../style/colors'
 import Preview from './preview'
 import ReactLoading from 'react-loading'
 
+const LoadingWrapper = styled.div`
+  text-align: center;
+  margin: 2rem; 0;
+  span {
+    display: inline-block;
+    padding-bottom: 0.3rem;
+  }
+  div {
+    display: inline-block;
+    margin-left: 1rem;
+  }
+`
+
 const SampleFlex = styled(Flex)`
   border-top: ${colors.primary.dark} 2px solid;
 `
@@ -359,7 +372,14 @@ const ProcessingMessage = () => (
     <LeadParagraph>
       Neaps is generating harmonic data. This might take a while.
     </LeadParagraph>
-    <ReactLoading type="bubbles" height={150} width={150} />
+    <LoadingWrapper>
+      <ReactLoading
+        type="bubbles"
+        color={colors.primary.dark}
+        height={150}
+        width={150}
+      />
+    </LoadingWrapper>
   </Container>
 )
 

@@ -5,7 +5,7 @@ import colors from '../../style/colors'
 import tidePrediction from '@neaps/tide-predictor'
 import moment from 'moment-timezone'
 import { VictoryAxis, VictoryLine, VictoryChart } from 'victory'
-import { ButtonLink, Button, ButtonAnchor } from '../../components/button'
+import { Link } from 'gatsby'
 
 const Preview = ({ harmonics, levels, dataTimezone, id }) => {
   if (typeof harmonics === 'undefined') {
@@ -27,11 +27,10 @@ const Preview = ({ harmonics, levels, dataTimezone, id }) => {
   })
   levels.results.slice(0, 100).forEach(level => {
     const now = moment(level.t)
-      .tz(dataTimezone)
-      .utc()
-      .toDate()
+    const offset = moment.tz.zone(moment.tz.guess()).utcOffset(now.valueOf())
+    now.add(offset, 'minute')
     const neapsPrediction = previewPrediction.getWaterLevelAtTime({
-      time: now
+      time: now.toDate()
     })
     chartData.push({
       time: level.t,
@@ -43,13 +42,31 @@ const Preview = ({ harmonics, levels, dataTimezone, id }) => {
   return (
     <Container>
       <h2>Data preview</h2>
-      <ButtonLink to={`/harmonics/submit?id=${id}`}>Submit data</ButtonLink>
-      <ButtonAnchor
-        download="harmonics.json"
-        href={URL.createObjectURL(new Blob([harmonicsJson]))}
-      >
-        Download data
-      </ButtonAnchor>
+      <p>
+        Below is a comparison between the first few records of water height, and
+        the predicted height using generated tidal constituents.{' '}
+      </p>
+      <ul>
+        <li>
+          <Link to={`/harmonics/submit?id=${id}`}>Submit data</Link> - Submit
+          tidal harmonics to the Neaps tide database.
+        </li>
+        <li>
+          <a
+            download="harmonics.json"
+            href={URL.createObjectURL(new Blob([harmonicsJson]))}
+          >
+            Download harmonic constituents
+          </a>{' '}
+          - Download the harmonic constituents to use directly in your
+          application.
+        </li>
+      </ul>
+      <h2>Comparison</h2>
+      <p>
+        The blue line is real water level observations, the red line is
+        predictions based on the generated tidal constituents.
+      </p>
       <VictoryChart
         padding={{ top: 0, bottom: 0, left: 50, right: 50 }}
         height={200}
