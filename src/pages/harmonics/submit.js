@@ -227,7 +227,7 @@ const SubmitHarmonics = ({ data }) => {
                 <Map
                   style={{ width: '100%', height: '300px' }}
                   center={[location.latitude, location.longitude]}
-                  zoom={9}
+                  zoom={7}
                   ref={mapRef}
                   onClick={event => {
                     const { latlng } = event
