@@ -150,6 +150,7 @@ const SubmitHarmonics = ({ data }) => {
           </p>
 
           <label htmlFor="timezone">Timezone</label>
+          <FormHelp>The timezone for the station's physical location.</FormHelp>
           <FormSelect
             id="timezone"
             onChange={event => {
@@ -203,28 +204,16 @@ const SubmitHarmonics = ({ data }) => {
             </Box>
             <Box width={[1, 1 / 2]}>
               {typeof window !== 'undefined' && (
-                <Map
-                  style={{ width: '100%', height: '300px' }}
-                  center={[location.latitude, location.longitude]}
-                  zoom={9}
-                  onClick={event => {
-                    location.latitude = event.latlng.lat
-                    location.longitude = event.latlng.lng
+                <StationMap
+                  location={location}
+                  onClickEvent={latlng => {
+                    location.latitude = latlng.lat
+                    location.longitude = latlng.lng
                     setLocation(location)
                     locationLatitudeRef.current.value = location.latitude
                     locationLongitudeRef.current.value = location.longitude
                   }}
-                >
-                  <TileLayer
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                  />
-                  {location.latitude !== 0 && location.longitude !== 0 && (
-                    <Marker
-                      position={[location.latitude, location.longitude]}
-                    />
-                  )}
-                </Map>
+                />
               )}
             </Box>
           </Flex>
@@ -354,6 +343,25 @@ const SubmitHarmonics = ({ data }) => {
     </Layout>
   )
 }
+
+const StationMap = ({ location, onClickEvent }) => (
+  <Map
+    style={{ width: '100%', height: '300px' }}
+    center={[location.latitude, location.longitude]}
+    zoom={9}
+    onClick={event => {
+      onClickEvent(event.latlng)
+    }}
+  >
+    <TileLayer
+      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    />
+    {location.latitude !== 0 && location.longitude !== 0 && (
+      <Marker position={[location.latitude, location.longitude]} />
+    )}
+  </Map>
+)
 
 export default SubmitHarmonics
 

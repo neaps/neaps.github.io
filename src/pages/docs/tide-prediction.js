@@ -1,6 +1,6 @@
 import React from 'react'
-import Layout from '../components/layout/default'
-import Container from '../components/container'
+import Layout from '../../components/layout/default'
+import Container from '../../components/container'
 import { graphql } from 'gatsby'
 
 const DocsPage = ({ data }) => (
