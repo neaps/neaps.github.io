@@ -20,13 +20,15 @@ import countries from 'country-list'
 import allTimezones from 'moment-timezone/data/packed/latest.json'
 import L from 'leaflet'
 
-delete L.Icon.Default.prototype._getIconUrl
+if (typeof window !== 'undefined') {
+  delete L.Icon.Default.prototype._getIconUrl
 
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-  iconUrl: require('leaflet/dist/images/marker-icon.png'),
-  shadowUrl: require('leaflet/dist/images/marker-shadow.png')
-})
+  L.Icon.Default.mergeOptions({
+    iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+    iconUrl: require('leaflet/dist/images/marker-icon.png'),
+    shadowUrl: require('leaflet/dist/images/marker-shadow.png')
+  })
+}
 
 const timezoneList = ['UTC/GMT']
 allTimezones.zones.forEach(zone => {
@@ -69,6 +71,8 @@ const SubmitHarmonics = ({ data }) => {
 
   const locationLatitudeRef = useRef(null)
   const locationLongitudeRef = useRef(null)
+  const mapMarkerRef = useRef(null)
+  const mapRef = useRef(null)
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -175,8 +179,16 @@ const SubmitHarmonics = ({ data }) => {
                 id="latitude"
                 ref={locationLatitudeRef}
                 onChange={event => {
-                  location.latitude = event.target.value
+                  location.latitude = parseFloat(event.target.value)
                   setLocation(location)
+                  mapMarkerRef.current.leafletElement.setLatLng([
+                    location.latitude,
+                    location.longitude
+                  ])
+                  mapRef.current.leafletElement.setView([
+                    location.latitude,
+                    location.longitude
+                  ])
                 }}
               />
               <label htmlFor="longitude">Longitude</label>
@@ -186,8 +198,16 @@ const SubmitHarmonics = ({ data }) => {
                 id="longitude"
                 ref={locationLongitudeRef}
                 onChange={event => {
-                  location.longitude = event.target.value
+                  location.longitude = parseFloat(event.target.value)
                   setLocation(location)
+                  mapMarkerRef.current.leafletElement.setLatLng([
+                    location.latitude,
+                    location.longitude
+                  ])
+                  mapRef.current.leafletElement.setView([
+                    location.latitude,
+                    location.longitude
+                  ])
                 }}
               />
 
@@ -204,16 +224,31 @@ const SubmitHarmonics = ({ data }) => {
             </Box>
             <Box width={[1, 1 / 2]}>
               {typeof window !== 'undefined' && (
-                <StationMap
-                  location={location}
-                  onClickEvent={latlng => {
+                <Map
+                  style={{ width: '100%', height: '300px' }}
+                  center={[location.latitude, location.longitude]}
+                  zoom={9}
+                  ref={mapRef}
+                  onClick={event => {
+                    const { latlng } = event
                     location.latitude = latlng.lat
                     location.longitude = latlng.lng
+                    mapMarkerRef.current.leafletElement.setLatLng(latlng)
+                    mapRef.current.leafletElement.setView(latlng)
                     setLocation(location)
                     locationLatitudeRef.current.value = location.latitude
                     locationLongitudeRef.current.value = location.longitude
                   }}
-                />
+                >
+                  <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                  />
+                  <Marker
+                    position={[location.latitude, location.longitude]}
+                    ref={mapMarkerRef}
+                  />
+                </Map>
               )}
             </Box>
           </Flex>
@@ -343,25 +378,6 @@ const SubmitHarmonics = ({ data }) => {
     </Layout>
   )
 }
-
-const StationMap = ({ location, onClickEvent }) => (
-  <Map
-    style={{ width: '100%', height: '300px' }}
-    center={[location.latitude, location.longitude]}
-    zoom={9}
-    onClick={event => {
-      onClickEvent(event.latlng)
-    }}
-  >
-    <TileLayer
-      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-    />
-    {location.latitude !== 0 && location.longitude !== 0 && (
-      <Marker position={[location.latitude, location.longitude]} />
-    )}
-  </Map>
-)
 
 export default SubmitHarmonics
 
