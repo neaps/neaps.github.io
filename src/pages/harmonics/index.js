@@ -56,6 +56,9 @@ const getTime = (time, timeFormat, dataTimezone) => {
   if (timeFormat === 'timestamp') {
     timestamp = time
   }
+  if (timeFormat === 'iso') {
+    timestamp = new Date(time).getTime() / 1000
+  }
   return moment
     .unix(timestamp)
     .tz(dataTimezone)
@@ -277,6 +280,7 @@ const HarmonicsPage = ({ data }) => {
                           }}
                         >
                           <option value="timestamp">UNIX timestamp</option>
+                          <option value="iso">ISO-formatted</option>
                         </FormSelect>
                         <label htmlFor="timezone_data">Timezone of data</label>
                         <FormSelect
@@ -371,7 +375,7 @@ const HarmonicsPage = ({ data }) => {
 const ProcessingMessage = () => (
   <Container>
     <LeadParagraph>
-      Neaps is generating harmonic data. This might take a while.
+      Computing tidal constituents... this might take a few seconds.
     </LeadParagraph>
     <LoadingWrapper>
       <ReactLoading
