@@ -204,6 +204,7 @@ const HarmonicsPage = ({ data }) => {
                           },
                           body: JSON.stringify({
                             uuid: id,
+                            timezone: dataTimezone,
                             levels: waterlevels.results
                           })
                         }

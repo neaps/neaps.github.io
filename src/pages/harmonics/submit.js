@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Layout from '../../components/layout/default'
 import Container from '../../components/container'
 import { graphql } from 'gatsby'
@@ -7,10 +7,20 @@ import { Flex, Box } from '@rebass/grid/emotion'
 import { FormInput, FormSelect, FormSubmit } from '../../components/forms'
 import { Map, Marker, TileLayer } from 'react-leaflet'
 import url from 'url'
+import colors from '../../style/colors'
 import 'leaflet/dist/leaflet.css'
 import styled from '@emotion/styled'
 import countries from 'country-list'
 import allTimezones from 'moment-timezone/data/packed/latest.json'
+import L from 'leaflet'
+
+delete L.Icon.Default.prototype._getIconUrl
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png')
+})
 
 const timezoneList = ['UTC/GMT']
 allTimezones.zones.forEach(zone => {
@@ -20,10 +30,24 @@ allTimezones.zones.forEach(zone => {
 
 const countryList = countries.getCodeList()
 
+const StationID = styled.span`
+  font-family: monospace;
+  display: inline-block;
+  padding: 0.2rem;
+  color: #fff;
+  background: ${colors.primary.dark};
+`
+
 const FormHelp = styled.p`
   font-size: 0.8rem;
   margin-bottom: 0;
 `
+
+const generateStationId = name => {
+  return slugify(name)
+    .toLowerCase()
+    .replace(/([^0-9a-z\-])/g, '')
+}
 
 const SubmitHarmonics = ({ data }) => {
   const [harmonics, setHarmonics] = useState(false)
@@ -35,6 +59,9 @@ const SubmitHarmonics = ({ data }) => {
   const [contact, setContact] = useState({})
   const [isBuildingPr, setIsBuildingPr] = useState(false)
   const [prUrl, setPrUrl] = useState(false)
+
+  const locationLatitudeRef = useRef(null)
+  const locationLongitudeRef = useRef(null)
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -52,15 +79,16 @@ const SubmitHarmonics = ({ data }) => {
 
   return (
     <Layout title="Submit harmonic data">
-      <p>Submit your tide data to the Neaps tide harmonics database.</p>
       <Container>
+        <p>Submit your tide data to the Neaps tide harmonics database.</p>
+
         <form
           onSubmit={event => {
             event.preventDefault()
             setIsBuildingPr(true)
             const station = {
               name: name,
-              id: slugify(name).toLowerCase(),
+              id: generateStationId(name),
               country: country,
               timezone: timezone,
               latitude: location.latitude,
@@ -109,9 +137,10 @@ const SubmitHarmonics = ({ data }) => {
             }}
           />
           <label htmlFor="slug">Station ID</label>
-          {name && (
-            <p>This station's ID will be {slugify(name).toLowerCase()}</p>
-          )}
+          <p>
+            This station's ID will be{' '}
+            {name && <StationID>{generateStationId(name)}</StationID>}
+          </p>
 
           <label htmlFor="timezone">Timezone</label>
           <FormSelect
@@ -136,6 +165,7 @@ const SubmitHarmonics = ({ data }) => {
                 type="text"
                 name="latitude"
                 id="latitude"
+                ref={locationLatitudeRef}
                 onChange={event => {
                   location.latitude = event.target.value
                   setLocation(location)
@@ -146,6 +176,7 @@ const SubmitHarmonics = ({ data }) => {
                 type="text"
                 name="longitude"
                 id="longitude"
+                ref={locationLongitudeRef}
                 onChange={event => {
                   location.longitude = event.target.value
                   setLocation(location)
@@ -158,12 +189,23 @@ const SubmitHarmonics = ({ data }) => {
                   style={{ width: '100%', height: '250px' }}
                   center={[location.latitude, location.longitude]}
                   zoom={9}
+                  onClick={event => {
+                    location.latitude = event.latlng.lat
+                    location.longitude = event.latlng.lng
+                    setLocation(location)
+                    locationLatitudeRef.current.value = location.latitude
+                    locationLongitudeRef.current.value = location.longitude
+                  }}
                 >
                   <TileLayer
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                   />
-                  <Marker position={[location.latitude, location.longitude]} />
+                  {location.latitude !== 0 && location.longitude !== 0 && (
+                    <Marker
+                      position={[location.latitude, location.longitude]}
+                    />
+                  )}
                 </Map>
               )}
             </Box>
