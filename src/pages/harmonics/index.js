@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Layout from '../../components/layout/default'
 import Container from '../../components/container'
 import { graphql } from 'gatsby'
@@ -20,19 +20,14 @@ import allTimezones from 'moment-timezone/data/packed/latest.json'
 import moment from 'moment-timezone'
 import colors from '../../style/colors'
 import Preview from './preview'
-import ReactLoading from 'react-loading'
 
-const LoadingWrapper = styled.div`
-  text-align: center;
-  margin: 2rem; 0;
-  span {
-    display: inline-block;
-    padding-bottom: 0.3rem;
-  }
-  div {
-    display: inline-block;
-    margin-left: 1rem;
-  }
+const XtideOutput = styled.pre`
+  color: #fff;
+  background: rgb(42, 39, 52);
+  padding: 1rem;
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  font-size: 0.8rem;
+  white-space: pre-wrap;
 `
 
 const FormDelimeter = styled(FormInput)`
@@ -120,6 +115,8 @@ const parseLevels = (
 }
 
 const HarmonicsPage = ({ data }) => {
+  const { harmonicsServer, harmonicsSocket } = data.site.siteMetadata
+
   const [levels, setLevels] = useState(false)
   const [id, setId] = useState(false)
   const [units, setUnits] = useState('metric')
@@ -129,52 +126,11 @@ const HarmonicsPage = ({ data }) => {
   const [harmonics, setHarmonics] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
-
-  useEffect(() => {
-    if (!isProcessing) {
-      return
-    }
-
-    const checkStatus = () => {
-      if (typeof window === 'undefined') {
-        return
-      }
-      fetch(`${data.site.siteMetadata.harmonicsServer}status/${id}`)
-        .then(response => {
-          return response.json()
-        })
-        .then(status => {
-          if (status.done) {
-            setTimeout(() => {
-              fetch(`${data.site.siteMetadata.harmonicsServer}get/${id}`)
-                .then(response => {
-                  return response.json()
-                })
-                .then(results => {
-                  setHarmonics(results)
-                  setIsProcessing(false)
-                })
-                .catch(error => {
-                  console.log('Get error')
-                  setTimeout(checkStatus, 2000)
-                })
-            }, 2000)
-            return
-          }
-          setTimeout(checkStatus, 2000)
-        })
-        .catch(error => {
-          console.log('Status check error')
-          setTimeout(checkStatus, 2000)
-        })
-    }
-    checkStatus()
-  }, [isProcessing])
-
+  const [xtideOutput, setXtideOutput] = useState([])
   return (
     <Layout title="Generate tide harmonics">
       {isProcessing ? (
-        <ProcessingMessage />
+        <ProcessingMessage message={xtideOutput} />
       ) : (
         <>
           {harmonics ? (
@@ -206,23 +162,53 @@ const HarmonicsPage = ({ data }) => {
                         timeFormat,
                         dataTimezone
                       )
-                      fetch(
-                        `${data.site.siteMetadata.harmonicsServer}generate`,
-                        {
-                          method: 'POST',
-                          mode: 'cors',
-                          headers: {
-                            'Content-Type': 'application/json'
-                          },
-                          body: JSON.stringify({
-                            uuid: id,
-                            timezone: dataTimezone,
-                            levels: waterlevels.results
-                          })
-                        }
-                      ).then(response => {
+                      fetch(`${harmonicsServer}generate`, {
+                        method: 'POST',
+                        mode: 'cors',
+                        headers: {
+                          'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                          uuid: id,
+                          timezone: dataTimezone,
+                          levels: waterlevels.results
+                        })
+                      }).then(response => {
                         setId(id)
                         setIsProcessing(true)
+
+                        xtideOutput.push(
+                          'Starting harmonics generator server...\n\n'
+                        )
+                        setXtideOutput(xtideOutput)
+                        let socket = new WebSocket(harmonicsSocket)
+                        socket.onopen = function(e) {
+                          socket.send(JSON.stringify({ uuid: id }))
+                        }
+
+                        socket.onmessage = function(event) {
+                          const { type, data } = JSON.parse(event.data)
+                          if (type === 'message' || type === 'error') {
+                            xtideOutput.push(data)
+                            setXtideOutput(xtideOutput)
+                          }
+                          if (type === 'close' || type === 'exit') {
+                            xtideOutput.push('\n\nFetching harmonic data')
+                            setXtideOutput(xtideOutput)
+                            fetch(`${harmonicsServer}get/${id}`)
+                              .then(response => {
+                                return response.json()
+                              })
+                              .then(results => {
+                                //setHarmonics(results)
+                                //setIsProcessing(false)
+                                socket.close()
+                              })
+                              .catch(error => {
+                                console.log('Get error')
+                              })
+                          }
+                        }
                       })
                     }}
                   >
@@ -385,19 +371,10 @@ const HarmonicsPage = ({ data }) => {
   )
 }
 
-const ProcessingMessage = () => (
+const ProcessingMessage = ({ message }) => (
   <Container>
-    <LeadParagraph>
-      Computing tidal constituents... this might take a few seconds.
-    </LeadParagraph>
-    <LoadingWrapper>
-      <ReactLoading
-        type="bubbles"
-        color={colors.primary.dark}
-        height={150}
-        width={150}
-      />
-    </LoadingWrapper>
+    <LeadParagraph>Computing tidal constituents.</LeadParagraph>
+    <XtideOutput>{message.join('')}</XtideOutput>
   </Container>
 )
 
@@ -408,6 +385,7 @@ export const query = graphql`
     site {
       siteMetadata {
         harmonicsServer
+        harmonicsSocket
       }
     }
   }
