@@ -200,8 +200,8 @@ const HarmonicsPage = ({ data }) => {
                                 return response.json()
                               })
                               .then(results => {
-                                //setHarmonics(results)
-                                //setIsProcessing(false)
+                                setHarmonics(results)
+                                setIsProcessing(false)
                                 socket.close()
                               })
                               .catch(error => {
