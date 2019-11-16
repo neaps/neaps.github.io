@@ -67,7 +67,7 @@ const Layout = ({ title, children }) => (
       <Container>
         <Flex flexWrap="wrap">
           <Box width={[1 / 2]}>
-            <HomeLink to="/">neaps</HomeLink>
+            <HomeLink to="/">Neaps</HomeLink>
           </Box>
           <Box width={[1 / 2]}>
             <Navigation>

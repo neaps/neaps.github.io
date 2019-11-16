@@ -5,6 +5,7 @@ import constituents from '@neaps/tide-predictor/src/constituents'
 import { LeadParagraph } from '../../components/type'
 import Table from '../../components/table'
 import colors from '../../style/colors'
+import { Flex, Box } from '@rebass/grid/emotion'
 import tidePrediction from '@neaps/tide-predictor'
 import { VictoryAxis, VictoryLine, VictoryChart } from 'victory'
 import { Link, graphql } from 'gatsby'
@@ -26,6 +27,7 @@ const DocsHarmonicsPage = ({ data }) => {
           benthic environment. These constituents are derived from analyzing
           past water levels.
         </LeadParagraph>
+
         <p>
           You can think of each tidal constituent as a sine wave. For example,
           below is a single constituent, M2, or "Principal lunar semidiurnal
@@ -104,6 +106,14 @@ const DocsHarmonicsPage = ({ data }) => {
           publish tidal constituents that are avialble on their website and via
           an API. Other agencies do not provide constituents, but do provide
           data on observed levels.
+        </p>
+
+        <p>
+          We are also working on a{' '}
+          <a href="https://github.com/neaps/tide-database">
+            world-wide database of tidal constiutents
+          </a>
+          .
         </p>
 
         <p>

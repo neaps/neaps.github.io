@@ -62,8 +62,9 @@ const IndexPage = ({ data }) => (
       </p>
       <p>
         <strong>Neaps</strong> uses standard algorithims to predict tide levels
-        anywhere that has well-defined harmonic constituents, or a record of
-        past water levels. This is useful for:
+        anywhere that has{' '}
+        <Link to="/docs/harmonics">well-defined harmonic constituents</Link>.
+        This is useful for:
       </p>
       <ul>
         <li>Offline access</li>

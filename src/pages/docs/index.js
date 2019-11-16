@@ -7,22 +7,26 @@ const DocsPage = ({ data }) => (
   <Layout title="Documentation">
     <Container>
       <h3>
-        <Link to="/docs/tide-prediction">
-          Using the tide prediction package
-        </Link>
+        <Link to="/docs/tide-prediction">Make tide predictions</Link>
       </h3>
       <p>
         How to use the{' '}
         <a href="https://www.npmjs.com/package/@neaps/tide-predictor">
-          node tide prediction package.
+          neaps tide prediction package.
         </a>
       </p>
       <h3>
-        <Link to="/docs/harmonics/">An overview of harmonic constituents</Link>
+        <Link to="/docs/harmonics/">Harmonic constituents</Link>
       </h3>
       <p>
         Neaps uses predefined harmonic constituents to predict tides. Where
         there is a lot of math involved, a basic understanding is helpful.
+      </p>
+      <h3>
+        <Link to="/docs/database">Harmonic constituent database</Link>
+      </h3>
+      <p>
+        A world-wide database of tide stations with their harmonic constituents.
       </p>
     </Container>
   </Layout>

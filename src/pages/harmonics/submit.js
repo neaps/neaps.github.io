@@ -61,6 +61,7 @@ const generateStationId = name => {
 const SubmitHarmonics = ({ data }) => {
   const [harmonics, setHarmonics] = useState(false)
   const [source, setSource] = useState({})
+  const [license, setLicense] = useState({})
   const [name, setName] = useState(false)
   const [country, setCountry] = useState(false)
   const [timezone, setTimezone] = useState('Etc/UTC')
@@ -106,6 +107,7 @@ const SubmitHarmonics = ({ data }) => {
               longitude: location.longitude,
               type: 'reference',
               source: source,
+              license: license,
               harmonic_constituents: []
             }
             station.source.published_harmonics = false
@@ -309,18 +311,51 @@ const SubmitHarmonics = ({ data }) => {
             }}
           />
 
-          <label htmlFor="source-license">License information</label>
+          <FormHeader>License</FormHeader>
+          <p>
+            Let others know what rights or restrictions they have to use this
+            data.
+          </p>
+
+          <label htmlFor="license-commercial-use">
+            <input
+              type="checkbox"
+              style={{ marginRight: '0.5rem' }}
+              id="license-commercial-use"
+              onChange={event => {
+                license.commercial_use = event.target.checked ? true : false
+                setLicense(license)
+              }}
+            />
+            Available for commercial use
+          </label>
           <FormHelp>
-            Briefly describe any license restrictions, and provide a URL if
-            possible for more information.
+            When checked, it means the data is availble for commercial use.
+          </FormHelp>
+
+          <label htmlFor="license-url">URL of license information</label>
+          <FormHelp>
+            Provide a link to read about the license of the data.
           </FormHelp>
           <FormInput
             type="text"
-            name="source-license"
-            id="source-license"
+            name="license-url"
+            id="license-url"
             onChange={event => {
-              source.license = event.target.value
-              setSource(source)
+              license.url = event.target.value
+              setLicense(license)
+            }}
+          />
+
+          <label htmlFor="license-note">Notes</label>
+          <FormHelp>Any additional notes on the license</FormHelp>
+          <FormInput
+            type="text"
+            name="license-note"
+            id="license-note"
+            onChange={event => {
+              license.note = event.target.value
+              setLicense(license)
             }}
           />
 
