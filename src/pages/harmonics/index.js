@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Layout from '../../components/layout/default'
 import Container from '../../components/container'
 import { graphql } from 'gatsby'
@@ -127,6 +127,11 @@ const HarmonicsPage = ({ data }) => {
   const [isUploading, setIsUploading] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
   const [xtideOutput, setXtideOutput] = useState([])
+
+  useEffect(() => {
+    fetch(harmonicsServer)
+  }, [])
+
   return (
     <Layout title="Generate tide harmonics">
       {isProcessing ? (
