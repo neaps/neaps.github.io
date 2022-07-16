@@ -38,10 +38,10 @@ const constituents = [
 
 const highLowTides = tidePrediction(constituents, {
   phaseKey: "phase_GMT"
-}).getExtremesPrediction(
-  new Date("2019-01-01"),
-  new Date("2019-01-10")
-);`
+}).getExtremesPrediction({
+  start: new Date("2019-01-01"),
+  end: new Date("2019-01-10")
+});`
 
 const IndexPage = ({ data }) => (
   <Layout>
