@@ -32,27 +32,27 @@ exports.sourceNodes = ({ actions, createNodeId, reporter }, configOptions) => {
     } else {
       const harmonics = request(
         'GET',
-        `https://tidesandcurrents.noaa.gov/mdapi/v1.0/webapi/stations/${stationId}/harcon.json?units=metric`
+        `https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/${stationId}/harcon.json?units=metric`
       )
       station.harmonics = JSON.parse(harmonics.getBody())
       const levels = request(
         'GET',
-        `https://tidesandcurrents.noaa.gov/api/datagetter?date=recent&station=${stationId}&product=predictions&datum=MTL&time_zone=gmt&units=metric&format=json`
+        `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?date=recent&station=${stationId}&product=predictions&datum=MTL&time_zone=gmt&units=metric&format=json`
       )
       station.levels = JSON.parse(levels.getBody())
       const datum = request(
         'GET',
-        `https://tidesandcurrents.noaa.gov/mdapi/v1.0/webapi/stations/${stationId}/datums.json?units=metric`
+        `https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/${stationId}/datums.json?units=metric`
       )
       station.datum = JSON.parse(datum.getBody())
       const info = request(
         'GET',
-        `https://tidesandcurrents.noaa.gov/mdapi/latest/webapi/stations/${stationId}.json?units=english`
+        `https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/${stationId}.json?units=english`
       )
       station.info = JSON.parse(info.getBody())
       const observations = request(
         'GET',
-        `https://tidesandcurrents.noaa.gov/api/datagetter?date=recent&station=${stationId}&product=water_level&datum=MTL&time_zone=gmt&units=metric&format=json`
+        `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?date=recent&station=${stationId}&product=water_level&datum=MTL&time_zone=gmt&units=metric&format=json`
       )
       station.observations = JSON.parse(observations.getBody())
     }
