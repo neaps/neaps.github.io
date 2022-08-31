@@ -27,7 +27,7 @@
     "gatsby-transformer-remark": "^2.6.32",
     "leaflet": "^1.5.1",
     "luxon": "^1.21.0",
-    "moment-timezone": "^0.5.27",
+    "moment-timezone": "^0.5.35",
     "prism-react-renderer": "^1.0.1",
     "prismjs": "^1.17.1",
     "prop-types": "^15.7.2",
