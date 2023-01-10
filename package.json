@@ -26,7 +26,7 @@
     "gatsby-source-filesystem": "^2.1.35",
     "gatsby-transformer-remark": "^2.6.32",
     "leaflet": "^1.5.1",
-    "luxon": "^1.21.0",
+    "luxon": "^1.28.1",
     "moment-timezone": "^0.5.27",
     "prism-react-renderer": "^1.0.1",
     "prismjs": "^1.17.1",
