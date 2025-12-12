@@ -19,12 +19,12 @@ const Logo = styled.img`
 `
 
 const installCode = `# yarn
-yarn install @neaps/tide-prediction
+yarn install @neaps/tide-predictor
 
 #npm
-npm install --save @neaps/tide-prediction`
+npm install --save @neaps/tide-predictor`
 
-const basicUsageCode = `import TidePrediction from "@neaps/tide-prediction";
+const basicUsageCode = `import tidePredictor from "@neaps/tide-predictor";
 const constituents = [
   {
     phase_GMT: 98.7,
@@ -36,7 +36,7 @@ const constituents = [
   //....there are usually many, read the docs
 ];
 
-const highLowTides = tidePrediction(constituents, {
+const highLowTides = tidePredictor(constituents, {
   phaseKey: "phase_GMT"
 }).getExtremesPrediction({
   start: new Date("2019-01-01"),
