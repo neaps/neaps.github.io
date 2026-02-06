@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[2],{w2l6:function(e,t,o){"use strict";o.r(t);t.default=function(){if("undefined"!=typeof window){var e={"/":"https://openwaters.io/tides/neaps","/docs/harmonics":"https://openwaters.io/tides/harmonics","/docs/tide-prediction":"https://openwaters.io/tides/neaps","/docs/database":"https://openwaters.io/tides/database"}[window.location.pathname]||"https://openwaters.io";"undefined"!=typeof window&&window.location.replace(e)}return null}}}]);
+//# sourceMappingURL=component---src-pages-404-js-c26c3ebc8d74600f6a4f.js.map
