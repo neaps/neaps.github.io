@@ -24,7 +24,7 @@
     "gatsby-remark-prismjs": "^3.3.20",
     "gatsby-source-apiserver": "^2.0.0",
     "gatsby-source-filesystem": "^2.1.35",
-    "gatsby-transformer-remark": "^2.6.32",
+    "gatsby-transformer-remark": "^5.25.1",
     "leaflet": "^1.5.1",
     "luxon": "^1.21.0",
     "moment-timezone": "^0.5.27",
